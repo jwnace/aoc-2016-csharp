@@ -6,66 +6,23 @@ public static class Day02
 
     public static string Part1()
     {
-        var position = (X: 1, Y: 1);
-        var code = "";
-
-        foreach (var line in Input)
+        var startingPosition = (Col: 1, Row: 1);
+        var grid = new[]
         {
-            foreach (var c in line)
-            {
-                position = c switch
-                {
-                    'U' => (position.X, position.Y - 1),
-                    'R' => (position.X + 1, position.Y),
-                    'D' => (position.X, position.Y + 1),
-                    'L' => (position.X - 1, position.Y),
-                };
+            "_____",
+            "_123_",
+            "_456_",
+            "_789_",
+            "_____"
+        };
 
-                if (position.X < 0)
-                {
-                    position.X = 0;
-                }
-
-                if (position.X > 2)
-                {
-                    position.X = 2;
-                }
-
-                if (position.Y < 0)
-                {
-                    position.Y = 0;
-                }
-
-                if (position.Y > 2)
-                {
-                    position.Y = 2;
-                }
-            }
-
-            var digit = position switch
-            {
-                (0, 0) => 1,
-                (1, 0) => 2,
-                (2, 0) => 3,
-                (0, 1) => 4,
-                (1, 1) => 5,
-                (2, 1) => 6,
-                (0, 2) => 7,
-                (1, 2) => 8,
-                (2, 2) => 9,
-            };
-
-            code += digit;
-        }
-
-        return code;
+        return GetCode(startingPosition, grid);
     }
 
     public static string Part2()
     {
-        var position = (X: 1, Y: 3);
-        var code = "";
-        var grid = new string[]
+        var startingPosition = (Col: 1, Row: 3);
+        var grid = new[]
         {
             "_______",
             "___1___",
@@ -76,7 +33,12 @@ public static class Day02
             "_______"
         };
 
-        Console.WriteLine($"Starting at {grid[position.X][position.Y]}");
+        return GetCode(startingPosition, grid);
+    }
+
+    private static string GetCode((int Col, int Row) position, IReadOnlyList<string> grid)
+    {
+        var code = "";
 
         foreach (var line in Input)
         {
@@ -84,19 +46,20 @@ public static class Day02
             {
                 var newPosition = c switch
                 {
-                    'U' => (X: position.X, Y: position.Y - 1),
-                    'R' => (X: position.X + 1, Y: position.Y),
-                    'D' => (X: position.X, Y: position.Y + 1),
-                    'L' => (X: position.X - 1, Y: position.Y),
+                    'U' => position with { Row = position.Row - 1 },
+                    'R' => position with { Col = position.Col + 1 },
+                    'D' => position with { Row = position.Row + 1 },
+                    'L' => position with { Col = position.Col - 1 },
+                    _ => throw new ArgumentOutOfRangeException()
                 };
 
-                if (grid[newPosition.X][newPosition.Y] != '_')
+                if (grid[newPosition.Row][newPosition.Col] != '_')
                 {
                     position = newPosition;
                 }
             }
 
-            var digit = grid[position.Y][position.X];
+            var digit = grid[position.Row][position.Col];
             code += digit;
         }
 
