@@ -4,7 +4,6 @@ namespace aoc_2016_csharp.Day04;
 
 public static class Day04
 {
-    private record Room(string Name, int SectorId, bool IsRealRoom, string DecryptedName = "");
     private static readonly string[] Input = File.ReadAllLines("Day04/day04.txt");
 
     public static int Part1()
@@ -67,7 +66,7 @@ public static class Day04
         }
 
         return rooms.Where(x => x.IsRealRoom)
-            .Single(x => x.DecryptedName.Contains("north") && x.DecryptedName.Contains("pole") && x.DecryptedName.Contains("object"))
+            .Single(x => x.DecryptedName.Contains("north") && x.DecryptedName.Contains("pole"))
             .SectorId;
     }
 
@@ -83,4 +82,6 @@ public static class Day04
 
         return new string(query);
     }
+
+    private record Room(string Name, int SectorId, bool IsRealRoom, string DecryptedName = "");
 }
