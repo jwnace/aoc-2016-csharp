@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.ComponentModel.Design;
+using System.Text.RegularExpressions;
 
 namespace aoc_2016_csharp.Day04;
 
@@ -6,43 +7,47 @@ public static class Day04
 {
     private static readonly string[] Input = File.ReadAllLines("Day04/day04.txt");
 
-    public static int Part1()
-    {
-        var rooms = new List<Room>();
+    public static int Part1() => GetRooms()
+        .Where(x => x.IsRealRoom)
+        .Sum(x => x.SectorId);
 
-        foreach (var line in Input)
+    public static int Part2() => GetRooms()
+        .Where(x => x.IsRealRoom)
+        .Single(x => x.DecryptedName.Contains("northpole"))
+        .SectorId;
+
+    private static IEnumerable<Room> GetRooms() => Input.Select(Room.FromString);
+
+    private record Room(string Name, int SectorId, bool IsRealRoom, string DecryptedName)
+    {
+        public static Room FromString(string input)
         {
-            var temp = line.Split("[");
-            var letters = Regex.Match(temp[0].Replace("-", ""), "[a-z]+").Value;
-            var checksum = temp[1][..^1];
-            var sectorId = int.Parse(Regex.Match(line, "[0-9]+").Value);
+            var parts = input.Split("[");
+            var letters = Regex.Match(parts[0].Replace("-", ""), "[a-z]+").Value;
+            var checksum = parts[1][..^1];
+            var sectorId = int.Parse(Regex.Match(input, "[0-9]+").Value);
             var computedChecksum = ComputeChecksum(letters);
             var isRealRoom = checksum == computedChecksum;
+            var decryptedName = GetDecryptedName(sectorId, input);
 
-            rooms.Add(new Room(line, sectorId, isRealRoom));
+            return new Room(input, sectorId, isRealRoom, decryptedName);
         }
 
-        return rooms.Where(x => x.IsRealRoom).Sum(x => x.SectorId);
-    }
+        private static string ComputeChecksum(string input) =>
+            new string(input.GroupBy(c => c)
+                .Select(g => new { g.Key, Count = g.Count() })
+                .OrderByDescending(g => g.Count)
+                .ThenBy(g => g.Key)
+                .Select(x => x.Key)
+                .Take(5)
+                .ToArray());
 
-    public static int Part2()
-    {
-        var rooms = new List<Room>();
-
-        foreach (var line in Input)
+        private static string GetDecryptedName(int sectorId, string name)
         {
-            var temp = line.Split("[");
-            var temp2 = Regex.Replace(temp[0], "[0-9]+", "");
-            var letters = Regex.Match(temp[0].Replace("-", ""), "[a-z]+").Value;
-            var checksum = temp[1][..^1];
-            var sectorId = int.Parse(Regex.Match(line, "[0-9]+").Value);
-            var computedChecksum = ComputeChecksum(letters);
-            var isRealRoom = checksum == computedChecksum;
             var shift = (char)(sectorId % (char)26);
-
             var shiftedLetters = "";
 
-            foreach (var c in temp2)
+            foreach (var c in name)
             {
                 if (c == '-')
                 {
@@ -60,28 +65,7 @@ public static class Day04
                 shiftedLetters += shiftedChar;
             }
 
-            var decryptedName = shiftedLetters.Trim();
-
-            rooms.Add(new Room(line, sectorId, isRealRoom, decryptedName));
+            return shiftedLetters.Trim();
         }
-
-        return rooms.Where(x => x.IsRealRoom)
-            .Single(x => x.DecryptedName.Contains("north") && x.DecryptedName.Contains("pole"))
-            .SectorId;
     }
-
-    private static string ComputeChecksum(string input)
-    {
-        var query = input.GroupBy(c => c)
-            .Select(g => new { g.Key, Count = g.Count() })
-            .OrderByDescending(g => g.Count)
-            .ThenBy(g => g.Key)
-            .Select(x => x.Key)
-            .Take(5)
-            .ToArray();
-
-        return new string(query);
-    }
-
-    private record Room(string Name, int SectorId, bool IsRealRoom, string DecryptedName = "");
 }
