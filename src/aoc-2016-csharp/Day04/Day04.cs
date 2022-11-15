@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.Design;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace aoc_2016_csharp.Day04;
 
@@ -24,8 +23,8 @@ public static class Day04
         {
             var parts = input.Split("[");
             var letters = Regex.Match(parts[0].Replace("-", ""), "[a-z]+").Value;
-            var checksum = parts[1][..^1];
             var sectorId = int.Parse(Regex.Match(input, "[0-9]+").Value);
+            var checksum = parts[1][..^1];
             var computedChecksum = ComputeChecksum(letters);
             var isRealRoom = checksum == computedChecksum;
             var decryptedName = GetDecryptedName(sectorId, input);
@@ -42,30 +41,11 @@ public static class Day04
                 .Take(5)
                 .ToArray());
 
-        private static string GetDecryptedName(int sectorId, string name)
-        {
-            var shift = (char)(sectorId % (char)26);
-            var shiftedLetters = "";
-
-            foreach (var c in name)
-            {
-                if (c == '-')
-                {
-                    shiftedLetters += ' ';
-                    continue;
-                }
-
-                char shiftedChar = (char)(c + shift);
-
-                if (shiftedChar > (char)122)
-                {
-                    shiftedChar -= (char)26;
-                }
-
-                shiftedLetters += shiftedChar;
-            }
-
-            return shiftedLetters.Trim();
-        }
+        private static string GetDecryptedName(int sectorId, string name) =>
+            new string(name.Split("-")[..^1]
+                .SelectMany(x => x + " ")
+                .Select(x => x != ' ' ? (char)(x + (sectorId % 26)) : x)
+                .Select(x => x > 122 ? (char)(x - 26) : x)
+                .ToArray()).Trim();
     }
 }
