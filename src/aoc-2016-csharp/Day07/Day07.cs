@@ -1,10 +1,23 @@
-﻿using System.Text.RegularExpressions;
-
-namespace aoc_2016_csharp.Day07;
+﻿namespace aoc_2016_csharp.Day07;
 
 public static class Day07
 {
     private static readonly string[] Input = File.ReadAllLines("Day07/day07.txt");
+
+    public static int Part0()
+    {
+        foreach (var line in Input)
+        {
+            for (int i = 0; i < line.Length - 3; i++)
+            {
+                var chunk = new string(line.Skip(i).Take(4).ToArray());
+
+                var foo = "bar";
+            }
+        }
+
+        return 0;
+    }
 
     public static int Part1()
     {
