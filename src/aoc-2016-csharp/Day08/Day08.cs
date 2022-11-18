@@ -3,8 +3,6 @@ namespace aoc_2016_csharp.Day08;
 public static class Day08
 {
     private static readonly string[] Input = File.ReadAllLines("Day08/day08.txt");
-    private const int ScreenWidth = 50;
-    private const int ScreenHeight = 6;
 
     public static int Part1() => GenerateScreenOutput().SelectMany(x => x).Count(x => x == '#');
 
@@ -22,7 +20,7 @@ public static class Day08
             "                                                  ",
             "                                                  ",
         };
-        
+
         foreach (var line in Input)
         {
             var parts = line.Split(' ');
@@ -75,7 +73,7 @@ public static class Day08
     {
         var buffer = screen.Select(x => x.ToCharArray()).ToArray();
 
-        buffer[row] = buffer[row].Select((c, i) => new { NewIndex = (i + shift) % ScreenWidth, Value = c })
+        buffer[row] = buffer[row].Select((c, i) => new { NewIndex = (i + shift) % buffer[row].Length, Value = c })
             .OrderBy(x => x.NewIndex)
             .Select(x => x.Value)
             .ToArray();
@@ -87,9 +85,9 @@ public static class Day08
     {
         var buffer = screen.Select(x => x.ToCharArray()).ToArray();
 
-        for (var i = 0; i < ScreenHeight; i++)
+        for (var i = 0; i < buffer.Length; i++)
         {
-            var newRow = (i + shift) % ScreenHeight;
+            var newRow = (i + shift) % buffer.Length;
             buffer[newRow][col] = screen[i][col];
         }
 
