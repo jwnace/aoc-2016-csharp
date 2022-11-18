@@ -52,6 +52,3 @@ public class Day09Tests
         actual.Should().Be(expectedLength);
     }
 }
-
-// X(8x2)(3x3)ABCY
-// 111111111111111
