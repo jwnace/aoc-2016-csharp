@@ -39,12 +39,10 @@ public static class Day09
                 continue;
             }
 
-            if (input[i] == ')')
+            if (input[i] != ')')
             {
-                continue;
+                buffer += input[i];
             }
-
-            buffer += input[i];
         }
 
         return buffer;
@@ -92,12 +90,10 @@ public static class Day09
                 continue;
             }
 
-            if (input[i] == ')')
+            if (input[i] != ')')
             {
-                continue;
+                result += weights[i];
             }
-
-            result += weights[i];
         }
 
         return result;
