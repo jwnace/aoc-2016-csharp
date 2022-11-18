@@ -5,3 +5,4 @@ global using aoc_2016_csharp.Day04;
 global using aoc_2016_csharp.Day05;
 global using aoc_2016_csharp.Day06;
 global using aoc_2016_csharp.Day07;
+global using aoc_2016_csharp.Day08;
