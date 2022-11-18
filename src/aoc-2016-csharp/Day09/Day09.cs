@@ -1,8 +1,105 @@
-﻿namespace aoc_2016_csharp.Day09;
+﻿using System.Xml;
+
+namespace aoc_2016_csharp.Day09;
 
 public static class Day09
 {
-    public static int Part1() => 1;
+    private static readonly string Input = File.ReadAllText("Day09/day09.txt");
 
-    public static int Part2() => 2;
+    public static int Part1() => DecompressStringVersionOne(Input).Length;
+
+    public static long Part2() => GetDecompressedLength(Input);
+
+    public static string DecompressStringVersionOne(string input)
+    {
+        if (!input.Contains('('))
+        {
+            return input;
+        }
+
+        var buffer = "";
+
+        for (var i = 0; i < input.Length; i++)
+        {
+            if (input[i] == '(')
+            {
+                var j = input.IndexOf(')', i);
+                var marker = input[(i + 1)..j];
+                var temp = marker.Split('x');
+                var length = int.Parse(temp[0]);
+                var times = int.Parse(temp[1]);
+                var sequence = input.Substring(j + 1, length);
+
+                for (var k = 0; k < times; k++)
+                {
+                    buffer += sequence;
+                }
+
+                i = j + length;
+                continue;
+            }
+
+            if (input[i] == ')')
+            {
+                continue;
+            }
+
+            buffer += input[i];
+        }
+
+        return buffer;
+    }
+
+    public static string DecompressStringVersionTwo(string input)
+    {
+        var output = input;
+
+        while (output.Contains('('))
+        {
+            output = DecompressStringVersionOne(output);
+        }
+
+        return output;
+    }
+
+    public static long GetDecompressedLength(string input)
+    {
+        if (!input.Contains('('))
+        {
+            return input.Length;
+        }
+
+        var result = 0l;
+        var weights = new int[input.Length];
+        Array.Fill(weights, 1);
+
+        for (var i = 0; i < input.Length; i++)
+        {
+            if (input[i] == '(')
+            {
+                var j = input.IndexOf(')', i);
+                var marker = input[(i + 1)..j];
+                var temp = marker.Split('x');
+                var length = int.Parse(temp[0]);
+                var times = int.Parse(temp[1]);
+
+                for (var k = j + 1; k < j + 1 + length; k++)
+                {
+                    weights[k] *= times;
+                }
+
+                i = j;
+                continue;
+            }
+
+            if (input[i] == ')')
+            {
+                continue;
+            }
+
+            result += weights[i];
+        }
+
+        return result;
+    }
 }

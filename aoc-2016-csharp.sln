@@ -1,6 +1,12 @@
 ﻿Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "aoc-2016-csharp", "src/aoc-2016-csharp/aoc-2016-csharp.csproj", "{3C19BFDD-EA94-4882-A22B-4E1E7A2B3992}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "aoc-2016-csharp-tests", "tests\aoc-2016-csharp-tests\aoc-2016-csharp-tests.csproj", "{3466CD5F-56F7-4A91-A361-A64021F49D2C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{AC84FEA0-F787-452B-A65F-27CC00C60120}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{6AFD8CA6-1CDF-4EDA-88FC-D03139049F9F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -11,5 +17,13 @@ Global
 		{3C19BFDD-EA94-4882-A22B-4E1E7A2B3992}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3C19BFDD-EA94-4882-A22B-4E1E7A2B3992}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3C19BFDD-EA94-4882-A22B-4E1E7A2B3992}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3466CD5F-56F7-4A91-A361-A64021F49D2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3466CD5F-56F7-4A91-A361-A64021F49D2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3466CD5F-56F7-4A91-A361-A64021F49D2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3466CD5F-56F7-4A91-A361-A64021F49D2C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3C19BFDD-EA94-4882-A22B-4E1E7A2B3992} = {AC84FEA0-F787-452B-A65F-27CC00C60120}
+		{3466CD5F-56F7-4A91-A361-A64021F49D2C} = {6AFD8CA6-1CDF-4EDA-88FC-D03139049F9F}
 	EndGlobalSection
 EndGlobal
