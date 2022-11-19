@@ -11,9 +11,9 @@ public static class Day10
         while (bots.Any(x => x.Chips.Count == 2))
         {
             var bot = bots.First(x => x.Chips.Count == 2);
-            var comparison = bot.Run();
+            var chips = bot.Run();
 
-            if (comparison.Low == 17 && comparison.High == 61)
+            if (chips.Low == 17 && chips.High == 61)
             {
                 return bot.Name;
             }
