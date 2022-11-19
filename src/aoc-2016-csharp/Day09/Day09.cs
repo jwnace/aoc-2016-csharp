@@ -1,6 +1,4 @@
-﻿using System.Xml;
-
-namespace aoc_2016_csharp.Day09;
+﻿namespace aoc_2016_csharp.Day09;
 
 public static class Day09
 {
@@ -24,10 +22,9 @@ public static class Day09
             if (input[i] == '(')
             {
                 var j = input.IndexOf(')', i);
-                var marker = input[(i + 1)..j];
-                var temp = marker.Split('x');
-                var length = int.Parse(temp[0]);
-                var times = int.Parse(temp[1]);
+                var values = input[(i + 1)..j].Split('x');
+                var length = int.Parse(values[0]);
+                var times = int.Parse(values[1]);
                 var sequence = input.Substring(j + 1, length);
 
                 for (var k = 0; k < times; k++)
@@ -67,7 +64,7 @@ public static class Day09
             return input.Length;
         }
 
-        var result = 0l;
+        var result = 0L;
         var weights = new int[input.Length];
         Array.Fill(weights, 1);
 
@@ -76,10 +73,9 @@ public static class Day09
             if (input[i] == '(')
             {
                 var j = input.IndexOf(')', i);
-                var marker = input[(i + 1)..j];
-                var temp = marker.Split('x');
-                var length = int.Parse(temp[0]);
-                var times = int.Parse(temp[1]);
+                var values = input[(i + 1)..j].Split('x');
+                var length = int.Parse(values[0]);
+                var times = int.Parse(values[1]);
 
                 for (var k = j + 1; k < j + 1 + length; k++)
                 {
