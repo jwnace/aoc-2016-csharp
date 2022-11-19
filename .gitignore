@@ -1,4 +1,4 @@
-﻿/aoc-2016-csharp.sln.DotSettings.user
-/src/aoc-2016-csharp/obj
-/src/aoc-2016-csharp/bin
+﻿**/bin
+**/obj
+*.user
 .idea
