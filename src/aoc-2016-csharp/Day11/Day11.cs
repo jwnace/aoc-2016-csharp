@@ -34,6 +34,12 @@ public static class Day11
         {
             return null;
         }
+        
+        // if this is a state where a microchip gets fried, throw it out
+        if (IsInvalidState(state))
+        {
+            return null;
+        }
 
         // add the current state to the list of known states
         KnownStates.Add(state);
@@ -46,6 +52,12 @@ public static class Day11
     private static bool AreEquivalent(string[,] a, string[,] b)
     {
         // TODO: implement a comparison to determine if two states are equivalent given that all pairs can be treated the same
+        throw new NotImplementedException();
+    }
+
+    private static bool IsInvalidState(string[,] state)
+    {
+        // TODO: check if this state would result in any fried microchips
         throw new NotImplementedException();
     }
 
