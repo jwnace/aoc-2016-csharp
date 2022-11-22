@@ -2,21 +2,19 @@ namespace aoc_2016_csharp.Day13;
 
 public static class Day13
 {
-    private static readonly long Input = 1362;
+    private static readonly int Input = int.Parse(File.ReadAllText("Day13/day13.txt"));
     private static readonly Dictionary<(int, int), int> Nodes = new();
     private static readonly PriorityQueue<(int, int), int> Queue = new();
 
-    public static long Part1()
+    public static int Part1()
     {
         Dijkstra(1, 1);
-
         return Nodes[(31, 39)];
     }
 
-    public static long Part2()
+    public static int Part2()
     {
         Dijkstra(1, 1);
-
         return Nodes.Count(x => x.Value <= 50);
     }
 
@@ -55,12 +53,10 @@ public static class Day13
         }
     }
 
-    private static bool IsWall(long x, long y)
+    private static bool IsWall(int x, int y)
     {
         var temp = (x * x) + (3 * x) + (2 * x * y) + y + (y * y) + Input;
-
-        var binaryString = Convert.ToString(temp, 2);
-
-        return binaryString.Count(c => c == '1') % 2 != 0;
+        var binary = Convert.ToString(temp, 2);
+        return binary.Count(c => c == '1') % 2 != 0;
     }
 }
