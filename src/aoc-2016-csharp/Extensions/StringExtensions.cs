@@ -1,4 +1,7 @@
-﻿namespace aoc_2016_csharp.Extensions;
+﻿using System.Security.Cryptography;
+using System.Text;
+
+namespace aoc_2016_csharp.Extensions;
 
 public static class StringExtensions
 {
@@ -13,6 +16,22 @@ public static class StringExtensions
         for (var i = 0; i < input.Length - size + 1; i++)
         {
             yield return new string(input.Skip(i).Take(4).ToArray());
+        }
+    }
+
+    /// <summary>
+    /// Generates an MD5 hash for a given input string.
+    /// </summary>
+    /// <param name="input">The input string to be hashed.</param>
+    /// <returns>A new string representing the MD5 hash of the input string.</returns>
+    public static string ToMd5String(this string input)
+    {
+        using (var md5 = MD5.Create())
+        {
+            var inputBytes = Encoding.ASCII.GetBytes(input);
+            var hashBytes = md5.ComputeHash(inputBytes);
+
+            return Convert.ToHexString(hashBytes).ToLower();
         }
     }
 }
