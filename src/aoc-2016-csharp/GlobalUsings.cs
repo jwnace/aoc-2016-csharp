@@ -9,3 +9,5 @@ global using aoc_2016_csharp.Day08;
 global using aoc_2016_csharp.Day09;
 global using aoc_2016_csharp.Day10;
 global using aoc_2016_csharp.Day11;
+global using aoc_2016_csharp.Day12;
+global using aoc_2016_csharp.Day13;
