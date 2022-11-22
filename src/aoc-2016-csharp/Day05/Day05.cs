@@ -1,5 +1,4 @@
-﻿using System.Security.Cryptography;
-using System.Text;
+﻿using aoc_2016_csharp.Extensions;
 
 namespace aoc_2016_csharp.Day05;
 
@@ -11,9 +10,10 @@ public static class Day05
     {
         var password = "";
 
-        for (int i = 0; i < int.MaxValue; i++)
+        for (var i = 0; i < int.MaxValue; i++)
         {
-            var md5 = CreateMD5(Input + i);
+            var temp = Input + i;
+            var md5 = temp.ToMd5String();
 
             if (!md5.StartsWith("00000"))
             {
@@ -37,7 +37,8 @@ public static class Day05
 
         for (var i = 0; i < int.MaxValue; i++)
         {
-            var md5 = CreateMD5(Input + i);
+            var temp = Input + i;
+            var md5 = temp.ToMd5String();
 
             if (!md5.StartsWith("00000") || !int.TryParse(md5[5].ToString(), out var j) || j > 7 || password[j] != '_')
             {
@@ -53,16 +54,5 @@ public static class Day05
         }
 
         return "";
-    }
-
-    private static string CreateMD5(string input)
-    {
-        using (var md5 = MD5.Create())
-        {
-            var inputBytes = Encoding.ASCII.GetBytes(input);
-            var hashBytes = md5.ComputeHash(inputBytes);
-
-            return Convert.ToHexString(hashBytes);
-        }
     }
 }
