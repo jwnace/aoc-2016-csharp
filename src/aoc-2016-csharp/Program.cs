@@ -22,17 +22,5 @@
 // Console.WriteLine($"Day 12 Part 2: {Day12.Part2()}");
 // Console.WriteLine($"Day 13 Part 1: {Day13.Part1()}");
 // Console.WriteLine($"Day 13 Part 2: {Day13.Part2()}");
-
-using System.Diagnostics;
-
-var stopwatch = new Stopwatch();
-stopwatch.Start();
 Console.WriteLine($"Day 14 Part 1: {Day14.Part1()}");
-stopwatch.Stop();
-Console.WriteLine($"Took {stopwatch.Elapsed} to run!");
-stopwatch.Reset();
-
-stopwatch.Start();
 Console.WriteLine($"Day 14 Part 2: {Day14.Part2()}");
-stopwatch.Stop();
-Console.WriteLine($"Took {stopwatch.Elapsed} to run!");
