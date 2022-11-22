@@ -14,56 +14,13 @@ public static class Day12
             { "d", 0 },
         };
 
-        for (var i = 0; i < Input.Length; i++)
-        {
-            var line = Input[i];
-            var temp = line.Split(' ');
-            var instruction = temp[0];
-
-            if (instruction == "cpy")
-            {
-                var x = temp[1];
-                var y = temp[2];
-
-                registers[y] = int.TryParse(x, out var foo) ? foo : registers[x];
-            }
-            else if (instruction == "inc")
-            {
-                var x = temp[1];
-
-                registers[x] += 1;
-            }
-            else if (instruction == "dec")
-            {
-                var x = temp[1];
-
-                registers[x] -= 1;
-            }
-            else if (instruction == "jnz")
-            {
-                var x = temp[1];
-                var y = temp[2];
-
-                var xValue = int.TryParse(x, out var foo) ? foo : registers[x];
-                var yValue = int.TryParse(y, out var bar) ? bar : registers[y];
-
-                if (xValue != 0)
-                {
-                    i += yValue - 1;
-                }
-            }
-            else
-            {
-                throw new InvalidOperationException($"unsupported instruction: {instruction}");
-            }
-        }
+        Run(registers);
 
         return registers["a"];
     }
 
     public static int Part2()
     {
-        
         var registers = new Dictionary<string, int>
         {
             { "a", 0 },
@@ -72,50 +29,45 @@ public static class Day12
             { "d", 0 },
         };
 
+        Run(registers);
+
+        return registers["a"];
+    }
+
+    private static void Run(Dictionary<string, int> registers)
+    {
         for (var i = 0; i < Input.Length; i++)
         {
-            var line = Input[i];
-            var temp = line.Split(' ');
-            var instruction = temp[0];
+            var values = Input[i].Split(' ');
+            var instruction = values[0];
 
             if (instruction == "cpy")
             {
-                var x = temp[1];
-                var y = temp[2];
-
-                registers[y] = int.TryParse(x, out var foo) ? foo : registers[x];
+                var (x, y) = (values[1], values[2]);
+                registers[y] = int.TryParse(x, out var result) ? result : registers[x];
             }
             else if (instruction == "inc")
             {
-                var x = temp[1];
-
+                var x = values[1];
                 registers[x] += 1;
             }
             else if (instruction == "dec")
             {
-                var x = temp[1];
-
+                var x = values[1];
                 registers[x] -= 1;
             }
             else if (instruction == "jnz")
             {
-                var x = temp[1];
-                var y = temp[2];
+                var (x, y) = (values[1], values[2]);
 
-                var xValue = int.TryParse(x, out var foo) ? foo : registers[x];
-                var yValue = int.TryParse(y, out var bar) ? bar : registers[y];
+                var xValue = int.TryParse(x, out var xResult) ? xResult : registers[x];
+                var yValue = int.TryParse(y, out var yResult) ? yResult : registers[y];
 
                 if (xValue != 0)
                 {
                     i += yValue - 1;
                 }
             }
-            else
-            {
-                throw new InvalidOperationException($"unsupported instruction: {instruction}");
-            }
         }
-
-        return registers["a"];
     }
 }
