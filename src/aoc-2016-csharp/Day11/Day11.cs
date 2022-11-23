@@ -4,27 +4,27 @@ namespace aoc_2016_csharp.Day11;
 
 public static class Day11
 {
-    private record State(string FirstFloor, string SecondFloor, string ThirdFloor, string FourthFloor, int Elevator)
+    private static readonly Dictionary<State, int> Nodes = new();
+    private static readonly Queue<State> Queue = new();
+
+    private record State(string FirstFloor, string SecondFloor, string ThirdFloor, string FourthFloor, int ElevatorPosition)
     {
         public bool IsValid()
         {
             var floors = new[] { FirstFloor, SecondFloor, ThirdFloor, FourthFloor };
             var generators = "ABCDEFG";
 
-            var q1 = floors.Any(x => x.Contains("a") && !x.Contains("A") && x.Any(y => generators.Contains(y)));
-            var q2 = floors.Any(x => x.Contains("b") && !x.Contains("B") && x.Any(y => generators.Contains(y)));
-            var q3 = floors.Any(x => x.Contains("c") && !x.Contains("C") && x.Any(y => generators.Contains(y)));
-            var q4 = floors.Any(x => x.Contains("d") && !x.Contains("D") && x.Any(y => generators.Contains(y)));
-            var q5 = floors.Any(x => x.Contains("e") && !x.Contains("E") && x.Any(y => generators.Contains(y)));
-            var q6 = floors.Any(x => x.Contains("f") && !x.Contains("F") && x.Any(y => generators.Contains(y)));
-            var q7 = floors.Any(x => x.Contains("g") && !x.Contains("G") && x.Any(y => generators.Contains(y)));
+            var a = floors.Any(x => x.Contains("a") && !x.Contains("A") && x.Any(y => generators.Contains(y)));
+            var b = floors.Any(x => x.Contains("b") && !x.Contains("B") && x.Any(y => generators.Contains(y)));
+            var c = floors.Any(x => x.Contains("c") && !x.Contains("C") && x.Any(y => generators.Contains(y)));
+            var d = floors.Any(x => x.Contains("d") && !x.Contains("D") && x.Any(y => generators.Contains(y)));
+            var e = floors.Any(x => x.Contains("e") && !x.Contains("E") && x.Any(y => generators.Contains(y)));
+            var f = floors.Any(x => x.Contains("f") && !x.Contains("F") && x.Any(y => generators.Contains(y)));
+            var g = floors.Any(x => x.Contains("g") && !x.Contains("G") && x.Any(y => generators.Contains(y)));
 
-            return !q1 && !q2 && !q3 && !q4 && !q5 && !q6 && !q7;
+            return !a && !b && !c && !d && !e && !f && !g;
         }
     }
-
-    private static readonly Dictionary<State, int> Nodes = new();
-    private static readonly Queue<State> Queue = new();
 
     public static int Part1()
     {
@@ -53,6 +53,10 @@ public static class Day11
 
     public static int Part2()
     {
+        // HACK: reset the dictionary because I'm lazy
+        Nodes.Clear();
+        Queue.Clear();
+
         var initialState = new State
         (
             "AFGafg",
@@ -76,28 +80,12 @@ public static class Day11
         return Nodes.First(x => x.Key.FourthFloor.Length == 14).Value;
     }
 
-    private static void ProcessNeighbors(IEnumerable<State> nodes, int steps)
-    {
-        foreach (var node in nodes)
-        {
-            if (Nodes.TryGetValue(node, out _) || !node.IsValid())
-            {
-                continue;
-            }
-
-            Nodes[node] = steps;
-            Queue.Enqueue(node);
-        }
-    }
-
     private static IEnumerable<State> GetNeighbors(State node)
     {
         var result = new List<State>();
 
         // figure out which floor the elevator is on
-        var currentFloor = node.Elevator;
-
-        var currentFloorString = currentFloor switch
+        var currentFloor = node.ElevatorPosition switch
         {
             1 => node.FirstFloor,
             2 => node.SecondFloor,
@@ -106,21 +94,22 @@ public static class Day11
             _ => throw new InvalidOperationException()
         };
 
-        var potentialLoads = currentFloorString.GetCombinations(2).Concat(currentFloorString.GetCombinations(1));
+        // get all possible elevator loads from the current floor
+        var potentialLoads = currentFloor.GetCombinations(2).Concat(currentFloor.GetCombinations(1));
 
         // move the elevator up if possible
-        if (currentFloor < 4)
+        if (node.ElevatorPosition < 4)
         {
             // build a new state, set its distance, and add it to the queue
-            var newStates = GetNewStates(node, currentFloor + 1, potentialLoads);
+            var newStates = GetNewStates(node, node.ElevatorPosition + 1, potentialLoads);
             result.AddRange(newStates);
         }
 
         // move the elevator down
-        if (currentFloor > 1)
+        if (node.ElevatorPosition > 1)
         {
             // build a new state, set its distance, and add it to the queue
-            var newStates = GetNewStates(node, currentFloor - 1, potentialLoads);
+            var newStates = GetNewStates(node, node.ElevatorPosition - 1, potentialLoads);
             result.AddRange(newStates);
         }
 
@@ -134,21 +123,39 @@ public static class Day11
         foreach (var load in potentialLoads)
         {
             var floors = new[] { null, node.FirstFloor, node.SecondFloor, node.ThirdFloor, node.FourthFloor };
-            var query1 = floors.Select(x => new string(x?.Except(load).ToArray()));
-            var query2 = query1.Select((x, i) => i == newFloor ? new string(x?.Concat(load).OrderBy(c => c).ToArray()) : x).ToArray();
+
+            // remove the load from the current floor (by removing it from ALL floors)
+            var q1 = floors.Select(x => new string(x?.Except(load).ToArray()));
+
+            // add the load to the new floor, and sort the values on the new floor alphabetically
+            var q2 = q1.Select((x, i) => i == newFloor ? new string(x?.Concat(load).OrderBy(c => c).ToArray()) : x).ToArray();
 
             var newState = node with
             {
-                Elevator = newFloor,
-                FirstFloor = query2[1],
-                SecondFloor = query2[2],
-                ThirdFloor = query2[3],
-                FourthFloor = query2[4],
+                ElevatorPosition = newFloor,
+                FirstFloor = q2[1],
+                SecondFloor = q2[2],
+                ThirdFloor = q2[3],
+                FourthFloor = q2[4],
             };
 
             result.Add(newState);
         }
 
         return result;
+    }
+
+    private static void ProcessNeighbors(IEnumerable<State> neighbors, int steps)
+    {
+        foreach (var neighbor in neighbors)
+        {
+            if (Nodes.TryGetValue(neighbor, out _) || !neighbor.IsValid())
+            {
+                continue;
+            }
+
+            Nodes[neighbor] = steps;
+            Queue.Enqueue(neighbor);
+        }
     }
 }
