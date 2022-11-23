@@ -15,12 +15,21 @@ public static class Day11
         var start = new List<List<string>>
         {
             // A = promethium, B = cobalt, C = curium, D = ruthenium, E = plutonium
-            new() { "AG", "AM", }, // first floor
+            new() { "AG", "AM", "E" }, // first floor
             new() { "BG", "CG", "DG", "EG", }, // second floor
-            new() { "E", "BM", "CM", "DM", "EM", }, // third floor
+            new() { "BM", "CM", "DM", "EM", }, // third floor
             new(), // fourth floor
         };
 
+        // var start = new List<List<string>>
+        // {
+        //     // A = promethium, B = cobalt, C = curium, D = ruthenium, E = plutonium
+        //     new() { "AM", "BM", "E" }, // first floor
+        //     new() { "AG", }, // second floor
+        //     new() { "BG", }, // third floor
+        //     new(), // fourth floor
+        // };
+        
         Queue.Enqueue(start, 0);
         Nodes[start] = 0;
 
@@ -33,8 +42,17 @@ public static class Day11
             new() { }, // first floor
             new() { }, // second floor
             new() { }, // third floor
-            new() { "E", "AG", "AM", "BG", "BM", "CG", "CM", "DG", "DM", "EG", "EM" }, // fourth floor
+            new() { "AG", "AM", "BG", "BM", "CG", "CM", "DG", "DM", "E", "EG", "EM" }, // fourth floor
         };
+        
+        // var end = new List<List<string>>
+        // {
+        //     // A = promethium, B = cobalt, C = curium, D = ruthenium, E = plutonium
+        //     new() { }, // first floor
+        //     new() { }, // second floor
+        //     new() { }, // third floor
+        //     new() { "AG", "AM", "BG", "BM", "E", }, // fourth floor
+        // };
 
         return Nodes[end];
     }
@@ -105,17 +123,15 @@ public static class Day11
                             var q4 = newState.Any(x => x.Contains("DM") && !x.Contains("DG") && x.Any(y => y.Contains('G')));
                             var q5 = newState.Any(x => x.Contains("EM") && !x.Contains("EG") && x.Any(y => y.Contains('G')));
 
-                            if (q1 || q2 || q3 || q4 || q5)
+                            if (!q1 && !q2 && !q3 && !q4 && !q5)
                             {
-                                continue;
-                            }
+                                var d = Nodes[node] + 1;
 
-                            var d = Nodes[node] + 1;
-
-                            if (!Nodes.TryGetValue(newState, out var nd) || d < nd)
-                            {
-                                Nodes[newState] = d;
-                                Queue.Enqueue(newState, d);
+                                if (!Nodes.TryGetValue(newState, out var nd) || d < nd)
+                                {
+                                    Nodes[newState] = d;
+                                    Queue.Enqueue(newState, d);
+                                }
                             }
                         }
 
@@ -123,7 +139,7 @@ public static class Day11
                         {
                             if (i != 2 || node[0].Count != 0 || node[1].Count != 0)
                             {
-                                if (n1 > 0)
+                                if (n1 >= 0)
                                 {
                                     var newState = new List<List<string>>(node.Select(x => new List<string>(x)));
                                     newState[n1].AddRange(load);
@@ -138,17 +154,15 @@ public static class Day11
                                     var q4 = newState.Any(x => x.Contains("DM") && !x.Contains("DG") && x.Any(y => y.Contains('G')));
                                     var q5 = newState.Any(x => x.Contains("EM") && !x.Contains("EG") && x.Any(y => y.Contains('G')));
 
-                                    if (q1 || q2 || q3 || q4 || q5)
+                                    if (!q1 && !q2 && !q3 && !q4 && !q5)
                                     {
-                                        continue;
-                                    }
+                                        var d = Nodes[node] + 1;
 
-                                    var d = Nodes[node] + 1;
-
-                                    if (!Nodes.TryGetValue(newState, out var nd) || d < nd)
-                                    {
-                                        Nodes[newState] = d;
-                                        Queue.Enqueue(newState, d);
+                                        if (!Nodes.TryGetValue(newState, out var nd) || d < nd)
+                                        {
+                                            Nodes[newState] = d;
+                                            Queue.Enqueue(newState, d);
+                                        }
                                     }
                                 }
                             }
@@ -157,5 +171,33 @@ public static class Day11
                 }
             }
         }
+    }
+
+    private static bool AreStatesEquivalent(List<List<string>> a, List<List<string>> b)
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            // if they have a different number of items per floor, return false
+            if (a[i].Count != b[i].Count)
+            {
+                return false;
+            }
+
+            // if they have a different number of generators per floor, return false
+            if (a[i].Count(x => x.Contains('G')) != b[i].Count(x => x.Contains('G')))
+            {
+                return false;
+            }
+            
+            // if they have a different number of microchips per floor, return false
+            if (a[i].Count(x => x.Contains('M')) != b[i].Count(x => x.Contains('M')))
+            {
+                return false;
+            }
+            
+            // TODO: what criteria need to be checked for equivalency?
+        }
+
+        return true;
     }
 }
