@@ -29,4 +29,16 @@ public class Day17Tests
         // assert
         actual.Should().BeEquivalentTo(expected);
     }
+
+    [TestCase("ihgpwlah", 370)]
+    [TestCase("kglvqrro", 492)]
+    [TestCase("ulqzkmiv", 830)]
+    public void Baz(string input, int expected)
+    {
+        // act
+        var actual = Day17.Baz(input);
+
+        // assert
+        actual.Should().Be(expected);
+    }
 }

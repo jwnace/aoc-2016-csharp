@@ -25,7 +25,7 @@ public static class Day17
 
     public static string Part1() => Bar(Input);
 
-    public static string Part2() => Bar(Input);
+    public static int Part2() => Baz(Input);
 
     public static string Foo(string input)
     {
@@ -34,6 +34,10 @@ public static class Day17
 
     public static string Bar(string input)
     {
+        // HACK: clear everything at the start to fix unit tests...
+        Nodes.Clear();
+        Queue.Clear();
+
         var initialState = new State((0, 0), input);
 
         Nodes[initialState] = 0;
@@ -47,7 +51,31 @@ public static class Day17
             ProcessNeighbors(neighbors, Nodes[node] + 1);
         }
 
-        return Nodes.Single(x => x.Key.Position == (3, 3)).Key.Path.Replace(input, "");
+        var temp = Nodes.Where(x => x.Key.Position == (3, 3)).ToList();
+
+        return Nodes.First(x => x.Key.Position == (3, 3)).Key.Path.Replace(input, "");
+    }
+
+    public static int Baz(string input)
+    {
+        // HACK: clear everything at the start to fix unit tests...
+        Nodes.Clear();
+        Queue.Clear();
+
+        var initialState = new State((0, 0), input);
+
+        Nodes[initialState] = 0;
+        Queue.Enqueue(initialState);
+
+        while (Queue.Count > 0)
+        {
+            var node = Queue.Dequeue();
+            var neighbors = GetNeighbors(node);
+
+            ProcessNeighbors(neighbors, Nodes[node] + 1);
+        }
+
+        return Nodes.Last(x => x.Key.Position == (3, 3)).Key.Path.Replace(input, "").Length;
     }
 
     private static IEnumerable<State> GetNeighbors(State node)
@@ -71,8 +99,12 @@ public static class Day17
     {
         foreach (var neighbor in neighbors)
         {
-            if (Nodes.Any(x => x.Key.Position == neighbor.Position))
+            if (neighbor.Position == (3, 3))
             {
+                Nodes[neighbor] = steps;
+
+                // HACK: empty the queue to stop searching
+                // Queue.Clear();
                 continue;
             }
 
