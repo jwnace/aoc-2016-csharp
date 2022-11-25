@@ -9,7 +9,7 @@ public class Day17Tests
     [TestCase("hijklD", "f2bc")]
     [TestCase("hijklDR", "5745")]
     [TestCase("hijklDU", "528e")]
-    public void Foo(string input, string expected)
+    public void GetDoorStatesTest(string input, string expected)
     {
         // act
         var actual = Day17.GetDoorStates(input);
@@ -21,7 +21,7 @@ public class Day17Tests
     [TestCase("ihgpwlah", "DDRRRD")]
     [TestCase("kglvqrro", "DDUDRLRRUDRD")]
     [TestCase("ulqzkmiv", "DRURDRUDDLLDLUURRDULRLDUUDDDRR")]
-    public void Bar(string input, string expected)
+    public void GetShortestPathTest(string input, string expected)
     {
         // act
         var actual = Day17.GetShortestPath(input);
@@ -33,7 +33,7 @@ public class Day17Tests
     [TestCase("ihgpwlah", 370)]
     [TestCase("kglvqrro", 492)]
     [TestCase("ulqzkmiv", 830)]
-    public void Baz(string input, int expected)
+    public void GetLongestPathLengthTest(string input, int expected)
     {
         // act
         var actual = Day17.GetLongestPathLength(input);
