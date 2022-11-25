@@ -12,7 +12,7 @@ public class Day17Tests
     public void Foo(string input, string expected)
     {
         // act
-        var actual = Day17.Foo(input);
+        var actual = Day17.GetDoorStates(input);
 
         // assert
         actual.Should().BeEquivalentTo(expected);
@@ -24,7 +24,7 @@ public class Day17Tests
     public void Bar(string input, string expected)
     {
         // act
-        var actual = Day17.Bar(input);
+        var actual = Day17.GetShortestPath(input);
 
         // assert
         actual.Should().BeEquivalentTo(expected);
@@ -36,7 +36,7 @@ public class Day17Tests
     public void Baz(string input, int expected)
     {
         // act
-        var actual = Day17.Baz(input);
+        var actual = Day17.GetLongestPathLength(input);
 
         // assert
         actual.Should().Be(expected);
