@@ -6,7 +6,11 @@ public static class Day22
 
     public static int Part1() => GetViablePairs();
 
-    public static int Part2() => 2;
+    public static string Part2()
+    {
+        PrettyPrint();
+        return "solved by hand";
+    }
 
     private static int GetViablePairs()
     {
@@ -59,6 +63,47 @@ public static class Day22
         }
 
         return nodes;
+    }
+
+    private static void PrettyPrint()
+    {
+        var nodes = GetNodes().OrderBy(n => n.Y).ThenBy(n => n.X).ToList();
+
+        for (var y = 0; y < 31; y++)
+        {
+            for (var x = 0; x < 33; x++)
+            {
+                var node = nodes.Single(n => n.X == x && n.Y == y);
+
+                if (node.X == 0 && node.Y == 0)
+                {
+                    Console.Write("(.)");
+                    continue;
+                }
+
+                if (node.X == 32 && node.Y == 0)
+                {
+                    Console.Write(" G ");
+                    continue;
+                }
+
+                if (node.Used == 0)
+                {
+                    Console.Write(" _ ");
+                    continue;
+                }
+
+                if (node.Used > 99)
+                {
+                    Console.Write(" # ");
+                    continue;
+                }
+
+                Console.Write(" . ");
+            }
+
+            Console.WriteLine();
+        }
     }
 
     private record Node(int X, int Y, int Size, int Used, int Available);
