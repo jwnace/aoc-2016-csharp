@@ -5,168 +5,154 @@ namespace aoc_2016_csharp.Day21;
 
 public static class Day21
 {
-    public static readonly string[] Input = File.ReadAllLines("Day21/day21.txt");
+    private static readonly string[] Input = File.ReadAllLines("Day21/day21.txt");
 
     public static string Part1() => Scramble("abcdefgh");
 
     public static string Part2() => Unscramble("fbgdceah");
 
-    public static string Scramble(string password)
+    private static string Scramble(string password)
     {
         var builder = new StringBuilder(password);
 
         foreach (var line in Input)
         {
-            // swap position X with position Y
-            // swap letter X with letter Y
-            // rotate left/right X steps
-            // rotate based on position of letter X
-            // reverse positions X through Y
-            // move position X to position Y
-
             var values = line.Split(' ');
 
-            if (values[0] == "swap")
+            switch (values[0])
             {
-                if (values[1] == "position")
-                {
-                    var (x, y) = (int.Parse(values[2]), int.Parse(values[5]));
-                    (builder[x], builder[y]) = (builder[y], builder[x]);
-                }
-                else if (values[1] == "letter")
-                {
-                    var (x, y) = (values[2], values[5]);
-                    builder.Replace(x, "_");
-                    builder.Replace(y, x);
-                    builder.Replace("_", y);
-                }
-                else
-                {
-                    throw new InvalidOperationException();
-                }
-            }
-            else if (values[0] == "rotate")
-            {
-                if (values[1] == "left")
-                {
-                    var x = int.Parse(values[2]);
-                    var buffer = new char[builder.Length];
-
-                    for (var i = 0; i < builder.Length; i++)
-                    {
-                        var index = (i + x) % builder.Length;
-                        buffer[i] = builder[index];
-                    }
-
-                    builder.Clear();
-                    builder.Append(buffer);
-                }
-                else if (values[1] == "right")
-                {
-                    var x = int.Parse(values[2]);
-                    var buffer = new char[builder.Length];
-
-                    for (var i = 0; i < builder.Length; i++)
-                    {
-                        var index = (i - x) % builder.Length;
-
-                        if (index < 0)
-                        {
-                            index += builder.Length;
-                        }
-
-                        buffer[i] = builder[index];
-                    }
-
-                    builder.Clear();
-                    builder.Append(buffer);
-                }
-                else if (values[1] == "based")
-                {
-                    var letters = new char[builder.Length];
-                    var letter = values[6];
-                    builder.CopyTo(0, letters, 0, builder.Length);
-
-                    // var q1 = letters
-                    // .Where(c => c.ToString() == letter)
-                    // .Select((_, i) => i)
-                    // .FirstOrDefault();
-
-                    var q2 = letters
-                        .Select((c, i) => new { Letter = c.ToString(), Index = i })
-                        .FirstOrDefault(c => c.Letter == letter)!
-                        .Index;
-
-                    var x = 1 + q2 + (q2 >= 4 ? 1 : 0);
-
-                    // if (q1 != q2)
-                    // {
-                    // throw new InvalidOperationException("q1 and q2 are different!");
-                    // }
-
-                    var buffer = new char[builder.Length];
-
-                    for (var i = 0; i < builder.Length; i++)
-                    {
-                        var index = (i - x) % builder.Length;
-
-                        if (index < 0)
-                        {
-                            index += builder.Length;
-                        }
-
-                        buffer[i] = builder[index];
-                    }
-
-                    builder.Clear();
-                    builder.Append(buffer);
-                }
-                else
-                {
-                    throw new InvalidOperationException();
-                }
-            }
-            else if (values[0] == "reverse")
-            {
-                var (x, y) = (int.Parse(values[2]), int.Parse(values[4]));
-
-                while (y > x)
-                {
-                    (builder[x], builder[y]) = (builder[y], builder[x]);
-                    x++;
-                    y--;
-                }
-            }
-            else if (values[0] == "move")
-            {
-                var (x, y) = (int.Parse(values[2]), int.Parse(values[5]));
-                var c = builder[x];
-                builder.Remove(x, 1);
-                builder.Insert(y, c);
-            }
-            else
-            {
-                throw new InvalidOperationException();
+                case "swap" when values[1] == "position":
+                    SwapByPosition(values, builder);
+                    break;
+                case "swap" when values[1] == "letter":
+                    SwapByLetter(values, builder);
+                    break;
+                case "rotate" when values[1] == "left":
+                    RotateLeft(values, builder);
+                    break;
+                case "rotate" when values[1] == "right":
+                    RotateRight(values, builder);
+                    break;
+                case "rotate" when values[1] == "based":
+                    RotateByLetter(builder, values);
+                    break;
+                case "reverse":
+                    Reverse(values, builder);
+                    break;
+                case "move":
+                    Move(values, builder);
+                    break;
             }
         }
 
         return builder.ToString();
     }
 
-    public static string Unscramble(string password)
+    private static string Unscramble(string password)
     {
-        var permutations = password.GetPermutations(password.Length);
+        var permutations = password.GetPermutations(password.Length).Select(x => new string(x.ToArray()));
 
-        foreach (var p in permutations)
+        foreach (var permutation in permutations)
         {
-            var permutation = new string(p.ToArray());
-
             if (password == Scramble(permutation))
             {
                 return permutation;
             }
         }
 
-        return "not found";
+        return "";
+    }
+
+    private static void SwapByPosition(string[] values, StringBuilder builder)
+    {
+        var (x, y) = (int.Parse(values[2]), int.Parse(values[5]));
+        (builder[x], builder[y]) = (builder[y], builder[x]);
+    }
+
+    private static void SwapByLetter(string[] values, StringBuilder builder)
+    {
+        var (x, y) = (values[2], values[5]);
+        builder.Replace(x, "_");
+        builder.Replace(y, x);
+        builder.Replace("_", y);
+    }
+
+    private static void RotateLeft(string[] values, StringBuilder builder)
+    {
+        var x = int.Parse(values[2]);
+        var buffer = new char[builder.Length];
+
+        for (var i = 0; i < builder.Length; i++)
+        {
+            var index = (i + x) % builder.Length;
+            buffer[i] = builder[index];
+        }
+
+        builder.Clear();
+        builder.Append(buffer);
+    }
+
+    private static void RotateRight(string[] values, StringBuilder builder)
+    {
+        var x = int.Parse(values[2]);
+        var buffer = new char[builder.Length];
+
+        for (var i = 0; i < builder.Length; i++)
+        {
+            var index = (i - x) % builder.Length;
+
+            if (index < 0)
+            {
+                index += builder.Length;
+            }
+
+            buffer[i] = builder[index];
+        }
+
+        builder.Clear();
+        builder.Append(buffer);
+    }
+
+    private static void RotateByLetter(StringBuilder builder, string[] values)
+    {
+        var letter = values[6];
+        var indexOfLetter = builder.ToString().IndexOf(letter, StringComparison.Ordinal);
+        var x = 1 + indexOfLetter + (indexOfLetter >= 4 ? 1 : 0);
+        var buffer = new char[builder.Length];
+
+        for (var i = 0; i < builder.Length; i++)
+        {
+            var index = (i - x) % builder.Length;
+
+            if (index < 0)
+            {
+                index += builder.Length;
+            }
+
+            buffer[i] = builder[index];
+        }
+
+        builder.Clear();
+        builder.Append(buffer);
+    }
+
+    private static void Reverse(string[] values, StringBuilder builder)
+    {
+        var (x, y) = (int.Parse(values[2]), int.Parse(values[4]));
+
+        while (y > x)
+        {
+            (builder[x], builder[y]) = (builder[y], builder[x]);
+            x++;
+            y--;
+        }
+    }
+
+    private static void Move(string[] values, StringBuilder builder)
+    {
+        var (x, y) = (int.Parse(values[2]), int.Parse(values[5]));
+        var c = builder[x];
+        builder.Remove(x, 1);
+        builder.Insert(y, c);
     }
 }
