@@ -10,20 +10,18 @@ public static class Day20
 
     private static long GetLowestAllowedIp()
     {
-        var blacklist = Input.Select(x => (Start: long.Parse(x.Split('-')[0]), End: long.Parse(x.Split('-')[1])))
-            .OrderBy(x => x.Start)
-            .ThenBy(x => x.End)
-            .ToList();
+        var blacklist = Input.Select(x => (Start: long.Parse(x.Split('-')[0]), End: long.Parse(x.Split('-')[1]))).ToList();
 
-        for (var i = 0; i < blacklist.Count - 1; i++)
+        for (var i = 0L; i < 4294967295L; i++)
         {
-            var left = blacklist[i];
-            var right = blacklist[i + 1];
+            var ranges = blacklist.Where(x => x.Start <= i && x.End >= i).ToList();
 
-            if (left.End + 1 < right.Start)
+            if (!ranges.Any())
             {
-                return left.End + 1;
+                return i;
             }
+
+            i = ranges.Max(x => x.End);
         }
 
         return 0;
@@ -32,22 +30,19 @@ public static class Day20
     private static long GetAllowedIpCount()
     {
         var count = 0L;
-        var blacklist = Input.Select(x => (Start: long.Parse(x.Split('-')[0]), End: long.Parse(x.Split('-')[1])))
-            .OrderBy(x => x.Start)
-            .ThenBy(x => x.End)
-            .ToList();
+        var blacklist = Input.Select(x => (Start: long.Parse(x.Split('-')[0]), End: long.Parse(x.Split('-')[1]))).ToList();
 
         for (var i = 0L; i < 4294967295L; i++)
         {
             var ranges = blacklist.Where(x => x.Start <= i && x.End >= i).ToList();
 
-            if (ranges.Any())
+            if (!ranges.Any())
             {
-                i = ranges.Max(x => x.End);
+                count++;
                 continue;
             }
 
-            count++;
+            i = ranges.Max(x => x.End);
         }
 
         return count;
