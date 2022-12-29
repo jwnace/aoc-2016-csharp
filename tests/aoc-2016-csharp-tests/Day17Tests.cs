@@ -10,10 +10,7 @@ public class Day17Tests
     [TestCase("hijklDU", "528e")]
     public void GetDoorStatesTest(string input, string expected)
     {
-        // act
         var actual = Day17.GetDoorStates(input);
-
-        // assert
         actual.Should().BeEquivalentTo(expected);
     }
 
@@ -22,10 +19,7 @@ public class Day17Tests
     [TestCase("ulqzkmiv", "DRURDRUDDLLDLUURRDULRLDUUDDDRR")]
     public void GetShortestPathTest(string input, string expected)
     {
-        // act
         var actual = Day17.GetShortestPath(input);
-
-        // assert
         actual.Should().BeEquivalentTo(expected);
     }
 
@@ -34,10 +28,23 @@ public class Day17Tests
     [TestCase("ulqzkmiv", 830)]
     public void GetLongestPathLengthTest(string input, int expected)
     {
-        // act
         var actual = Day17.GetLongestPathLength(input);
+        actual.Should().Be(expected);
+    }
 
-        // assert
+    [Test]
+    public void Part1_ReturnsCorrectAnswer()
+    {
+        var expected = "RDURRDDLRD";
+        var actual = Day17.Part1();
+        actual.Should().Be(expected);
+    }
+
+    [Test]
+    public void Part2_ReturnsCorrectAnswer()
+    {
+        var expected = 526;
+        var actual = Day17.Part2();
         actual.Should().Be(expected);
     }
 }

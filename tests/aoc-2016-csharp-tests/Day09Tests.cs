@@ -12,10 +12,7 @@ public class Day09Tests
     [TestCase("X(8x2)(3x3)ABCY", "X(3x3)ABC(3x3)ABCY")]
     public void DecompressStringVersionOneTest(string input, string expected)
     {
-        // act
         var actual = Day09.DecompressStringVersionOne(input);
-
-        // assert
         actual.Should().BeEquivalentTo(expected);
     }
 
@@ -27,10 +24,7 @@ public class Day09Tests
     [TestCase("X(8x2)(3x3)ABCY", "XABCABCABCABCABCABCY")]
     public void DecompressStringVersionTwoTest(string input, string expected)
     {
-        // act
         var actual = Day09.DecompressStringVersionTwo(input);
-
-        // assert
         actual.Should().BeEquivalentTo(expected);
     }
 
@@ -44,10 +38,23 @@ public class Day09Tests
     [TestCase("(25x3)(3x3)ABC(2x3)XY(5x2)PQRSTX(18x9)(3x2)TWO(5x7)SEVEN", 445)]
     public void GetDecompressedLengthTest(string input, int expectedLength)
     {
-        // act
         var actual = Day09.GetDecompressedLength(input);
-
-        // assert
         actual.Should().Be(expectedLength);
+    }
+
+    [Test]
+    public void Part1_ReturnsCorrectAnswer()
+    {
+        var expected = 99_145;
+        var actual = Day09.Part1();
+        actual.Should().Be(expected);
+    }
+
+    [Test]
+    public void Part2_ReturnsCorrectAnswer()
+    {
+        var expected = 10_943_094_568;
+        var actual = Day09.Part2();
+        actual.Should().Be(expected);
     }
 }
