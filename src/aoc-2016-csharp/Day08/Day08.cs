@@ -6,8 +6,7 @@ public static class Day08
 
     public static int Part1() => GenerateScreenOutput().SelectMany(x => x).Count(x => x == '#');
 
-    public static string Part2() =>
-        GenerateScreenOutput().Aggregate(Environment.NewLine, (current, row) => current + row + Environment.NewLine);
+    public static string Part2() => Environment.NewLine + string.Join(Environment.NewLine, GenerateScreenOutput());
 
     private static List<string> GenerateScreenOutput()
     {

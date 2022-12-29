@@ -8,10 +8,7 @@ public class Day19Tests
     [TestCase(3004953, 1815603)]
     public void SolvePart1Test(int input, int expected)
     {
-        // act
         var actual = Day19.SolvePart1(input);
-
-        // assert
         actual.Should().Be(expected);
     }
 
@@ -19,10 +16,23 @@ public class Day19Tests
     [TestCase(3004953, 1410630)]
     public void SolvePart2Test(int input, int expected)
     {
-        // act
         var actual = Day19.SolvePart2(input);
+        actual.Should().Be(expected);
+    }
 
-        // assert
+    [Test]
+    public void Part1_ReturnsCorrectAnswer()
+    {
+        var expected = 1_815_603;
+        var actual = Day19.Part1();
+        actual.Should().Be(expected);
+    }
+
+    [Test]
+    public void Part2_ReturnsCorrectAnswer()
+    {
+        var expected = 1_410_630;
+        var actual = Day19.Part2();
         actual.Should().Be(expected);
     }
 }

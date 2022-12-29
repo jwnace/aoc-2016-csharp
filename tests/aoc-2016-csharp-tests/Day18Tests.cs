@@ -17,10 +17,23 @@ public class Day18Tests
     [TestCase(".^^^..^.^^", "^^.^^^..^^")]
     public void GetNextRowTest(string input, string expected)
     {
-        // act
         var actual = Day18.GetNextRow(input);
-
-        // assert
         actual.Should().BeEquivalentTo(expected);
+    }
+
+    [Test]
+    public void Part1_ReturnsCorrectAnswer()
+    {
+        var expected = 1_926;
+        var actual = Day18.Part1();
+        actual.Should().Be(expected);
+    }
+
+    [Test]
+    public void Part2_ReturnsCorrectAnswer()
+    {
+        var expected = 19_986_699;
+        var actual = Day18.Part2();
+        actual.Should().Be(expected);
     }
 }
