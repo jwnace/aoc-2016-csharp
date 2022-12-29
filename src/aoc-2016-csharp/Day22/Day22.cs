@@ -8,7 +8,6 @@ public static class Day22
 
     public static string Part2()
     {
-        PrettyPrint();
         return "solved by hand";
     }
 
