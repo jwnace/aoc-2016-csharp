@@ -15,7 +15,13 @@ public class Day08Tests
     [Test]
     public void Part2_ReturnsCorrectAnswer()
     {
-        var expected = "ZJHRKCPLYJ";
+        var expected = Environment.NewLine +
+                       "####   ## #  # ###  #  #  ##  ###  #    #   #  ## " + Environment.NewLine +
+                       "   #    # #  # #  # # #  #  # #  # #    #   #   # " + Environment.NewLine +
+                       "  #     # #### #  # ##   #    #  # #     # #    # " + Environment.NewLine +
+                       " #      # #  # ###  # #  #    ###  #      #     # " + Environment.NewLine +
+                       "#    #  # #  # # #  # #  #  # #    #      #  #  # " + Environment.NewLine +
+                       "####  ##  #  # #  # #  #  ##  #    ####   #   ##  ";
         var actual = Day08.Part2();
         actual.Should().Be(expected);
     }
