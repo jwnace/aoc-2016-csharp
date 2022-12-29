@@ -15,7 +15,7 @@ public static class Day10
 
             if (chips.Low == 17 && chips.High == 61)
             {
-                return bot.Name;
+                return bot.Name.Split(' ').Last();
             }
         }
 
