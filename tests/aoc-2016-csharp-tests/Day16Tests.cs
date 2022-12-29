@@ -1,5 +1,4 @@
 using aoc_2016_csharp.Day16;
-using FluentAssertions;
 
 namespace aoc_2016_csharp_tests;
 
