@@ -7,7 +7,7 @@ public class Day25Tests
     [Test]
     public void Part1_ReturnsCorrectAnswer()
     {
-        var expected = 0;
+        var expected = 192;
         var actual = Day25.Part1();
         actual.Should().Be(expected);
     }
@@ -15,7 +15,7 @@ public class Day25Tests
     [Test]
     public void Part2_ReturnsCorrectAnswer()
     {
-        var expected = 0;
+        var expected = "Merry Christmas!";
         var actual = Day25.Part2();
         actual.Should().Be(expected);
     }
