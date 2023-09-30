@@ -7,33 +7,14 @@ public static class Day11
     private static readonly Dictionary<State, int> Nodes = new();
     private static readonly Queue<State> Queue = new();
 
-    private record State(string FirstFloor, string SecondFloor, string ThirdFloor, string FourthFloor, int ElevatorPosition)
-    {
-        public bool IsValid()
-        {
-            var floors = new[] { FirstFloor, SecondFloor, ThirdFloor, FourthFloor };
-            var generators = "ABCDEFG";
-
-            var a = floors.Any(x => x.Contains("a") && !x.Contains("A") && x.Any(y => generators.Contains(y)));
-            var b = floors.Any(x => x.Contains("b") && !x.Contains("B") && x.Any(y => generators.Contains(y)));
-            var c = floors.Any(x => x.Contains("c") && !x.Contains("C") && x.Any(y => generators.Contains(y)));
-            var d = floors.Any(x => x.Contains("d") && !x.Contains("D") && x.Any(y => generators.Contains(y)));
-            var e = floors.Any(x => x.Contains("e") && !x.Contains("E") && x.Any(y => generators.Contains(y)));
-            var f = floors.Any(x => x.Contains("f") && !x.Contains("F") && x.Any(y => generators.Contains(y)));
-            var g = floors.Any(x => x.Contains("g") && !x.Contains("G") && x.Any(y => generators.Contains(y)));
-
-            return !a && !b && !c && !d && !e && !f && !g;
-        }
-    }
-
     public static int Part1()
     {
         var initialState = new State
         (
-            "aA",
-            "BCDE",
-            "bcde",
-            "",
+            new[] { 'a', 'A' },
+            new[] { 'B', 'C', 'D', 'E' },
+            new[] { 'b', 'c', 'd', 'e' },
+            Array.Empty<char>(),
             1
         );
 
@@ -48,7 +29,7 @@ public static class Day11
             ProcessNeighbors(neighbors, Nodes[node] + 1);
         }
 
-        return Nodes.First(x => x.Key.FourthFloor.Length == 10).Value;
+        return Nodes.First(x => x.Key.FourthFloor.Count() == 10).Value;
     }
 
     public static int Part2()
@@ -59,10 +40,10 @@ public static class Day11
 
         var initialState = new State
         (
-            "AFGafg",
-            "BCDE",
-            "bcde",
-            "",
+            new[] { 'A', 'F', 'G', 'a', 'f', 'g' },
+            new[] { 'B', 'C', 'D', 'E' },
+            new[] { 'b', 'c', 'd', 'e' },
+            Array.Empty<char>(),
             1
         );
 
@@ -77,7 +58,7 @@ public static class Day11
             ProcessNeighbors(neighbors, Nodes[node] + 1);
         }
 
-        return Nodes.First(x => x.Key.FourthFloor.Length == 14).Value;
+        return Nodes.First(x => x.Key.FourthFloor.Count() == 14).Value;
     }
 
     private static IEnumerable<State> GetNeighbors(State node)
@@ -95,13 +76,15 @@ public static class Day11
         };
 
         // get all possible elevator loads from the current floor
-        var potentialLoads = currentFloor.GetCombinations(2).Concat(currentFloor.GetCombinations(1));
+        var enumerable = currentFloor as char[] ?? currentFloor.ToArray();
+        var potentialLoads = enumerable.GetCombinations(2).Concat(enumerable.GetCombinations(1));
 
         // move the elevator up if possible
+        var loads = potentialLoads as IEnumerable<char>[] ?? potentialLoads.ToArray();
         if (node.ElevatorPosition < 4)
         {
             // build a new state, set its distance, and add it to the queue
-            var newStates = GetNewStates(node, node.ElevatorPosition + 1, potentialLoads);
+            var newStates = GetNewStates(node, node.ElevatorPosition + 1, loads);
             result.AddRange(newStates);
         }
 
@@ -109,35 +92,42 @@ public static class Day11
         if (node.ElevatorPosition > 1)
         {
             // build a new state, set its distance, and add it to the queue
-            var newStates = GetNewStates(node, node.ElevatorPosition - 1, potentialLoads);
+            var newStates = GetNewStates(node, node.ElevatorPosition - 1, loads);
             result.AddRange(newStates);
         }
 
         return result;
     }
 
-    private static IEnumerable<State> GetNewStates(State node, int newFloor, IEnumerable<IEnumerable<char>> potentialLoads)
+    private static IEnumerable<State> GetNewStates(State node, int newFloor,
+        IEnumerable<IEnumerable<char>> potentialLoads)
     {
         var result = new List<State>();
 
         foreach (var load in potentialLoads)
         {
-            var floors = new[] { null, node.FirstFloor, node.SecondFloor, node.ThirdFloor, node.FourthFloor };
+            var floors = new[]
+            {
+                Array.Empty<char>(),
+                node.FirstFloor,
+                node.SecondFloor,
+                node.ThirdFloor,
+                node.FourthFloor
+            };
 
             // remove the load from the current floor (by removing it from ALL floors)
-            var q1 = floors.Select(x => new string(x?.Except(load).ToArray()));
+            var q1 = floors.Select(floor => floor.Except(load));
 
             // add the load to the new floor, and sort the values on the new floor alphabetically
-            var q2 = q1.Select((x, i) => i == newFloor ? new string(x?.Concat(load).OrderBy(c => c).ToArray()) : x).ToArray();
+            var q2 = q1.Select((x, i) => i == newFloor ? x.Concat(load).OrderBy(c => c) : x);
 
-            var newState = node with
-            {
-                ElevatorPosition = newFloor,
-                FirstFloor = q2[1],
-                SecondFloor = q2[2],
-                ThirdFloor = q2[3],
-                FourthFloor = q2[4],
-            };
+            var enumerable = q2 as IEnumerable<char>[] ?? q2.ToArray();
+            var newState = new State(
+                ElevatorPosition: newFloor,
+                FirstFloor: enumerable.ElementAt(1),
+                SecondFloor: enumerable.ElementAt(2),
+                ThirdFloor: enumerable.ElementAt(3),
+                FourthFloor: enumerable.ElementAt(4));
 
             result.Add(newState);
         }
