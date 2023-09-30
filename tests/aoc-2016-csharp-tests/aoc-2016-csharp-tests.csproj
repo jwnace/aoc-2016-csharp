@@ -5,6 +5,7 @@
         <RootNamespace>aoc_2016_csharp_tests</RootNamespace>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <LangVersion>11</LangVersion>
 
         <IsPackable>false</IsPackable>
     </PropertyGroup>
