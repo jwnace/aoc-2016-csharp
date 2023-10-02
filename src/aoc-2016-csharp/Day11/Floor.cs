@@ -2,6 +2,8 @@ namespace aoc_2016_csharp.Day11;
 
 public record Floor(int FloorState)
 {
+    public static implicit operator int(Floor floor) => floor.FloorState;
+
     public bool HasMicrochipA() => (FloorState & 1 << 0) > 0;
     public bool HasMicrochipB() => (FloorState & 1 << 1) > 0;
     public bool HasMicrochipC() => (FloorState & 1 << 2) > 0;
