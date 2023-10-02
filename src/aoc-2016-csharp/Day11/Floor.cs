@@ -1,5 +1,3 @@
-using System.Text;
-
 namespace aoc_2016_csharp.Day11;
 
 public record Floor(int FloorState)
@@ -24,6 +22,36 @@ public record Floor(int FloorState)
 
     public bool HasElevator() => (FloorState & 1 << 14) > 0;
 
+    public bool HasMicrochip(char letter)
+    {
+        return letter switch
+        {
+            'A' => HasMicrochipA(),
+            'B' => HasMicrochipB(),
+            'C' => HasMicrochipC(),
+            'D' => HasMicrochipD(),
+            'E' => HasMicrochipE(),
+            'F' => HasMicrochipF(),
+            'G' => HasMicrochipG(),
+            _ => throw new ArgumentOutOfRangeException(nameof(letter), letter, "Invalid letter")
+        };
+    }
+
+    public bool HasGenerator(char letter)
+    {
+        return letter switch
+        {
+            'A' => HasGeneratorA(),
+            'B' => HasGeneratorB(),
+            'C' => HasGeneratorC(),
+            'D' => HasGeneratorD(),
+            'E' => HasGeneratorE(),
+            'F' => HasGeneratorF(),
+            'G' => HasGeneratorG(),
+            _ => throw new ArgumentOutOfRangeException(nameof(letter), letter, "Invalid letter")
+        };
+    }
+
     private bool HasUnprotectedChip() =>
         HasUnprotectedChipA() ||
         HasUnprotectedChipB() ||
@@ -44,29 +72,4 @@ public record Floor(int FloorState)
     public bool HasGenerator() => (FloorState & 0b0_1111111_0000000) > 0;
 
     public bool IsValid() => !HasGenerator() || !HasUnprotectedChip();
-
-    public override string ToString()
-    {
-        var builder = new StringBuilder();
-
-        builder.Append(HasElevator() ? 'X' : '_');
-        builder.Append('_');
-        builder.Append(HasGeneratorA() ? 'A' : '_');
-        builder.Append(HasGeneratorB() ? 'B' : '_');
-        builder.Append(HasGeneratorC() ? 'C' : '_');
-        builder.Append(HasGeneratorD() ? 'D' : '_');
-        builder.Append(HasGeneratorE() ? 'E' : '_');
-        builder.Append(HasGeneratorF() ? 'F' : '_');
-        builder.Append(HasGeneratorG() ? 'G' : '_');
-        builder.Append('_');
-        builder.Append(HasMicrochipA() ? 'a' : '_');
-        builder.Append(HasMicrochipB() ? 'b' : '_');
-        builder.Append(HasMicrochipC() ? 'c' : '_');
-        builder.Append(HasMicrochipD() ? 'd' : '_');
-        builder.Append(HasMicrochipE() ? 'e' : '_');
-        builder.Append(HasMicrochipF() ? 'f' : '_');
-        builder.Append(HasMicrochipG() ? 'g' : '_');
-
-        return builder.ToString();
-    }
 }

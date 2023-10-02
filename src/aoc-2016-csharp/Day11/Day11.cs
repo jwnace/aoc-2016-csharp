@@ -144,7 +144,7 @@ public static class Day11
         {
             var node = Queue.Dequeue();
 
-            if (node.FourthFloor == 0b1_0011111_0011111)
+            if (node.Floor4 == 0b1_0011111_0011111)
             {
                 return Nodes[node];
             }
@@ -154,7 +154,7 @@ public static class Day11
             ProcessNeighbors(neighbors, Nodes[node] + 1);
         }
 
-        return Nodes.First(x => x.Key.FourthFloor == 0b1_0011111_0011111).Value;
+        return Nodes.First(x => x.Key.Floor4 == 0b1_0011111_0011111).Value;
     }
 
     public static int Part2()
@@ -178,7 +178,7 @@ public static class Day11
         {
             var node = Queue.Dequeue();
 
-            if (node.FourthFloor == 0b1_1111111_1111111)
+            if (node.Floor4 == 0b1_1111111_1111111)
             {
                 return Nodes[node];
             }
@@ -188,7 +188,7 @@ public static class Day11
             ProcessNeighbors(neighbors, Nodes[node] + 1);
         }
 
-        return Nodes.First(x => x.Key.FourthFloor == 0b1_1111111_1111111).Value;
+        return Nodes.First(x => x.Key.Floor4 == 0b1_1111111_1111111).Value;
     }
 
     private static IEnumerable<State> GetNeighbors(State node)
@@ -198,10 +198,10 @@ public static class Day11
         // figure out which floor the elevator is on
         var currentFloor = node.ElevatorPosition switch
         {
-            1 => node.FirstFloor,
-            2 => node.SecondFloor,
-            3 => node.ThirdFloor,
-            4 => node.FourthFloor,
+            1 => node.Floor1,
+            2 => node.Floor2,
+            3 => node.Floor3,
+            4 => node.Floor4,
             _ => throw new InvalidOperationException()
         };
 
@@ -235,10 +235,10 @@ public static class Day11
         foreach (var load in potentialLoads)
         {
             // remove the load from the current floor (by removing it from ALL floors)
-            var temp1 = node.FirstFloor & ~load;
-            var temp2 = node.SecondFloor & ~load;
-            var temp3 = node.ThirdFloor & ~load;
-            var temp4 = node.FourthFloor & ~load;
+            var temp1 = node.Floor1 & ~load;
+            var temp2 = node.Floor2 & ~load;
+            var temp3 = node.Floor3 & ~load;
+            var temp4 = node.Floor4 & ~load;
 
             // add the load to the new floor
             switch (newFloor)
