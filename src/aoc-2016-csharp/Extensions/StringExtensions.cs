@@ -26,12 +26,9 @@ public static class StringExtensions
     /// <returns>A new string representing the MD5 hash of the input string.</returns>
     public static string ToMd5String(this string input)
     {
-        using (var md5 = MD5.Create())
-        {
-            var inputBytes = Encoding.ASCII.GetBytes(input);
-            var hashBytes = md5.ComputeHash(inputBytes);
+        var inputBytes = Encoding.ASCII.GetBytes(input);
+        var hashBytes = MD5.HashData(inputBytes);
 
-            return Convert.ToHexString(hashBytes).ToLower();
-        }
+        return Convert.ToHexString(hashBytes).ToLower();
     }
 }
