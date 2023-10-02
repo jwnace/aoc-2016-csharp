@@ -162,18 +162,18 @@ public static class Day11
     private static void ProcessNewStates(
         IEnumerable<State> newStates,
         int steps,
-        Dictionary<State, int> Nodes,
-        Queue<State> Queue)
+        IDictionary<State, int> nodes,
+        Queue<State> queue)
     {
         foreach (var newState in newStates)
         {
-            if (Nodes.ContainsKey(newState))
+            if (nodes.ContainsKey(newState))
             {
                 continue;
             }
 
-            Nodes[newState] = steps;
-            Queue.Enqueue(newState);
+            nodes[newState] = steps;
+            queue.Enqueue(newState);
         }
     }
 }
